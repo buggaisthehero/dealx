@@ -64,8 +64,10 @@ public class SeleniumDriver extends TestBase
     public  String getTextFromElement(LocatorType locatorType, String value)
     {
         try {
+
             By locator = LocatorValue(locatorType, value);
-            WebElement element = webDriver.findElement(locator);
+            WebElement element = (new WebDriverWait(webDriver, 10))
+                    .until(ExpectedConditions.elementToBeClickable(webDriver.findElement(locator)));
 
             String text = element.getText();
             return text;
@@ -146,7 +148,7 @@ public class SeleniumDriver extends TestBase
 
     }
 
-    public boolean hoverOverAndClick(LocatorType locatorType, String menu, String subMenu) {
+    public boolean hoverOverMenuAndClickSubItem(LocatorType locatorType, String menu, String subMenu) {
         try
         {
             Actions a = new Actions(webDriver);
@@ -158,9 +160,7 @@ public class SeleniumDriver extends TestBase
             locator = LocatorValue(locatorType, subMenu);
             element = webDriver.findElement(locator);
 
-
             element.click();
-
 
             return true;
         }
@@ -168,6 +168,34 @@ public class SeleniumDriver extends TestBase
         {
             throw e;
         }
+    }
+
+    public void hoverOverMenuAndClickSubItemIfExist(LocatorType locatorType, String menu) {
+        try
+        {
+            Actions a = new Actions(webDriver);
+            By locator = LocatorValue(locatorType, menu);
+            WebElement element = (new WebDriverWait(webDriver, 10))
+                    .until(ExpectedConditions.elementToBeClickable(webDriver.findElement(locator)));
+            a.moveToElement(element).build().perform();
+
+            element = element.findElement(By.xpath("./ul/li/a"));
+
+            if (element != null)
+                element.click();
+
+        }
+        catch (WebDriverException e)
+        {
+            throw e;
+        }
+    }
+
+    public void switchToIframe(LocatorType locatorType, String value){
+        By locator = LocatorValue(locatorType, value);
+        WebElement element = (new WebDriverWait(webDriver, 20))
+                .until(ExpectedConditions.elementToBeClickable(webDriver.findElement(locator)));
+        webDriver.switchTo().frame(element);
     }
 
     public static By LocatorValue(LocatorType locatorType, String value)

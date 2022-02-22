@@ -28,7 +28,7 @@ public class TC5 extends TestBase {
 
             double unitPriceDigit = Double.parseDouble(unitPrice);
             String actualTotal = landingPage.getTotalPrice();
-            String expectedTotal = calculateTotalPrice(unitPriceDigit, quantity);
+            String expectedTotal = String.format("%S%S", "$", calculateTotalPrice(unitPriceDigit, quantity));
 
             Assert.assertEquals(actualTotal, expectedTotal);
 
@@ -37,7 +37,7 @@ public class TC5 extends TestBase {
 
     private  String calculateTotalPrice(double unitPrice, int qty){
         double totalPrice = unitPrice * qty;
-        String totalPriceStr = String.format("%f", totalPrice);
+        String totalPriceStr = String.format("%.2f", totalPrice);
 
         return totalPriceStr;
     }
